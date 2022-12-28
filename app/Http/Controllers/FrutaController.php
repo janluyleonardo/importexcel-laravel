@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Excel;
+use App\Models\Fruta;
+use App\Imports\excelImport;
 
 class FrutaController extends Controller
 {
@@ -13,7 +16,7 @@ class FrutaController extends Controller
      */
     public function index()
     {
-        return "hola bienvenido";
+        return view('frutas');
     }
 
     /**
@@ -80,5 +83,22 @@ class FrutaController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function importar(Request $request){
+        if ($request->hasFile('documento')){
+            // $path = $request->file('documento')->getRealPath();
+            $datos = Excel::import(new excelImport, request()->file('documento'));
+
+            if(!empty($datos) ){
+                $datos = $datos->toArray();
+                for($i=0; $i<count($datos); $i++){
+                    $datosImportados[] = $datos[$i];
+                }
+            }
+
+            Fruta::insert($datosImportados);
+        }
+        return back();
     }
 }

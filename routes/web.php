@@ -19,4 +19,4 @@ Route::get('/', function () {
 });
 
 Route::get('frutas', [FrutaController::class, 'index']);
-Route::post('frutas/importar', [FrutaController::class, '']);
+Route::post('frutas/importar', [FrutaController::class, 'importar']);
